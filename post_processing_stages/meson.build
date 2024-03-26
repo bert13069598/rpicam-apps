@@ -21,6 +21,7 @@ opencv_dep = dependency('opencv4', required : false)
 if enable_opencv and opencv_dep.found()
     rpicam_app_src += files([
         'sobel_cv_stage.cpp',
+        'inrange_stage.cpp',
         'face_detect_cv_stage.cpp',
         'annotate_cv_stage.cpp',
         'plot_pose_cv_stage.cpp',
