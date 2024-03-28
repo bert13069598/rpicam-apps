@@ -7,7 +7,15 @@
             "g":0,
             "r":255
         },
-        "low_saturation":100,
-        "low_value":120
+        "saturation":
+        {
+            "min":100,
+            "max":255
+        },
+        "value":
+        {
+            "min":120,
+            "max":255
+        }
     }
 }

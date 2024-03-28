@@ -34,7 +34,7 @@ public:
 private:
 	Stream *stream_;
 	
-	int low_hue1, low_hue2, high_hue1, high_hue2, low_saturation, low_value;
+	int low_hue1, low_hue2, high_hue1, high_hue2, low_saturation, low_value, high_saturation, high_value;
 	Scalar color;
 };
 
@@ -51,8 +51,10 @@ void InrangeStage::Read(boost::property_tree::ptree const &params)
         int g = params.get<int>("color.g", 0);
         int r = params.get<int>("color.r", 255);
         color = Scalar(b, g, r);
-		low_saturation = params.get<int>("low_saturation", 50);
-		low_value = params.get<int>("low_value", 50);
+		low_saturation = params.get<int>("saturation.min", 50);
+		high_saturation = params.get<int>("saturation.max", 255);
+		low_value = params.get<int>("value.min", 50);
+		high_value = params.get<int>("value.max", 255);
 }
 
 void InrangeStage::Configure()
@@ -110,8 +112,8 @@ bool InrangeStage::Process(CompletedRequestPtr &completed_request)
 	cvtColor(imageMat, imageMat, COLOR_RGB2HSV);
 
 	Mat img_mask, img_mask1, img_mask2;
-	inRange(imageMat, Scalar(low_hue1, low_saturation, low_value), Scalar(high_hue1, 255, 255), img_mask1);
-	inRange(imageMat, Scalar(low_hue2, low_saturation, low_value), Scalar(high_hue2, 255, 255), img_mask2);
+	inRange(imageMat, Scalar(low_hue1, low_saturation, low_value), Scalar(high_hue1, high_saturation, high_value), img_mask1);
+	inRange(imageMat, Scalar(low_hue2, low_saturation, low_value), Scalar(high_hue2, high_saturation, high_value), img_mask2);
 	img_mask = img_mask1 | img_mask2;
 
 	erode(img_mask, img_mask, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
