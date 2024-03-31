@@ -35,6 +35,7 @@ private:
 	Stream *stream_;
 	
 	int low_hue1, low_hue2, high_hue1, high_hue2, low_saturation, low_value, high_saturation, high_value;
+	int tmp = -100;
 	Scalar color;
 
 	vector<pair<int, int>> points;
@@ -103,6 +104,8 @@ bool InrangeStage::Process(CompletedRequestPtr &completed_request)
 	libcamera::Span<uint8_t> buffer = w.Get()[0];
 	uint8_t *ptr = (uint8_t *)buffer.data();
 
+	int seq = completed_request->sequence;
+
 	Mat src = Mat(info.height, info.width, CV_8U, ptr, info.stride);
 	
 	StreamInfo rgb_info;
@@ -139,7 +142,8 @@ bool InrangeStage::Process(CompletedRequestPtr &completed_request)
 		points.clear();
 	}
 
-	if (max != -1){
+
+	if (max != -1 && seq > tmp + 5){
 		int left = stats.at<int>(idx, CC_STAT_LEFT);
 		int top = stats.at<int>(idx, CC_STAT_TOP);
 		int width = stats.at<int>(idx, CC_STAT_WIDTH);
@@ -149,7 +153,7 @@ bool InrangeStage::Process(CompletedRequestPtr &completed_request)
 		int centerY = top + height / 2;
 
 		points.emplace_back(centerX, centerY);
-		
+		tmp = seq;
 		// rectangle(src, Point(left, top), Point(left + width, top + height), Scalar(255, 255, 255), 2);
 	}
 
