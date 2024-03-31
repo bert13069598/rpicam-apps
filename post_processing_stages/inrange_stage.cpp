@@ -36,6 +36,8 @@ private:
 	
 	int low_hue1, low_hue2, high_hue1, high_hue2, low_saturation, low_value, high_saturation, high_value;
 	Scalar color;
+
+	vector<pair<int, int>> points;
 };
 
 #define NAME "inrange"
@@ -133,13 +135,26 @@ bool InrangeStage::Process(CompletedRequestPtr &completed_request)
 		}
 	}
 
+	if (cv::waitKey(1) == 'c') {  
+		points.clear();
+	}
+
 	if (max != -1){
 		int left = stats.at<int>(idx, CC_STAT_LEFT);
 		int top = stats.at<int>(idx, CC_STAT_TOP);
 		int width = stats.at<int>(idx, CC_STAT_WIDTH);
 		int height = stats.at<int>(idx, CC_STAT_HEIGHT);
 
-		rectangle(src, Point(left, top), Point(left + width, top + height), Scalar(255, 255, 255), 2);
+		int centerX = left + width / 2;
+		int centerY = top + height / 2;
+
+		points.emplace_back(centerX, centerY);
+		
+		// rectangle(src, Point(left, top), Point(left + width, top + height), Scalar(255, 255, 255), 2);
+	}
+
+	for (auto point:points){
+		circle(src, Point(point.first, point.second), 10, Scalar(255, 255, 255), -1);
 	}
 
 	resize(img_mask, img_mask, Size(info.width / 4, info.height / 4), 0, 0, INTER_LINEAR);
