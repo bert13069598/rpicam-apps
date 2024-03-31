@@ -161,6 +161,13 @@ bool InrangeStage::Process(CompletedRequestPtr &completed_request)
 		circle(src, Point(point.first, point.second), 10, Scalar(255, 255, 255), -1);
 	}
 
+	stringstream annotation;
+	if (!points.empty())
+		annotation << to_string(points.size()) + " Shot";
+	else
+		annotation << to_string(0) + " Shot";
+	completed_request->post_process_metadata.Set("annotate.text", annotation.str());
+
 	resize(img_mask, img_mask, Size(info.width / 4, info.height / 4), 0, 0, INTER_LINEAR);
 	imshow("Mask Image", img_mask);
 	waitKey(10);

@@ -17,5 +17,14 @@
             "min":120,
             "max":255
         }
+    },
+    "annotate_cv" :
+    {
+	"text" : "Frame %frame exp %exp ag %ag dg %dg",
+	"fg" : 255,
+	"bg" : 0,
+	"scale" : 1.0,
+	"thickness" : 2,
+	"alpha" : 0.3
     }
 }
