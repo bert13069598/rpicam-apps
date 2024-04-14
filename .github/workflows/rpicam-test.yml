@@ -1,8 +1,8 @@
 name: ToT libcamera build/run test
 
 on:
-  schedule:
-  - cron: '02 01 * * *'
+  # schedule:
+  # - cron: '02 01 * * *'
   workflow_dispatch:
 
 env:
